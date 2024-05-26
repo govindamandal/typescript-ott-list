@@ -1,5 +1,18 @@
-import * as dotenv from 'dotenv';
+import * as http from "http";
+import App from "./app";
+import { APILogger } from "./logger/api.logger";
+require("dotenv").config();
 
-dotenv.config();
+const port = process.env.PORT || 3070;
 
-console.log(process.env.MONGODB_URI)
+App.set("port", port);
+const server = http.createServer(App);
+server.listen(port);
+
+const logger = new APILogger();
+
+server.on("listening", function (): void {
+  logger.info(`Listening on ${port}`, null);
+});
+
+module.exports = App;
